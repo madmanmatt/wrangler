@@ -83,7 +83,7 @@ if [ "$(printf '%s\n' "1.18.0" "$PGBOUNCER_VERSION" | sort -V | head -n1)" = "1.
 fi
 
 # Get current PgBouncer auth_type
-PGBOUNCER_AUTH_TYPE=$(grep -oP '(?<=auth_type\s*=\s*).+' /etc/pgbouncer/pgbouncer.ini | tr -d '[:space:]')
+PGBOUNCER_AUTH_TYPE=$(grep 'auth_type' /etc/pgbouncer/pgbouncer.ini | cut -d'=' -f2 | tr -d '[:space:]')
 
 if [ "$PGBOUNCER_AUTH_TYPE" != "scram-sha-256" ]; then
     log_message "WARNING: PgBouncer auth_type is not set to scram-sha-256 (found: $PGBOUNCER_AUTH_TYPE)"
@@ -95,7 +95,7 @@ log_message "Extracting user credentials from PostgreSQL"
 # Generate new userlist.txt content with SCRAM-SHA-256 password hashes
 # The format must be: "username" "SCRAM-SHA-256$<iterations>:<salt>$<stored_key>:<server_key>"
 su - $PG_SUPERUSER -c "psql -t -c \"
-    SELECT concat('\\\"', usename, '\\\" \\\"', 
+    SELECT concat('\\\"', rolname, '\\\" \\\"', 
                  CASE WHEN rolpassword LIKE 'SCRAM-SHA-256%' 
                       THEN rolpassword 
                       ELSE 'SCRAM-SHA-256' || substring(rolpassword from ':.*') 
