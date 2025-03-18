@@ -12,8 +12,8 @@
 set -e # Exit immediately if a command exits with a non-zero status
 
 # Configuration
-PGBOUNCER_USER="pgbouncer"
-PGBOUNCER_GROUP="pgbouncer"
+PGBOUNCER_USER="postgres"
+PGBOUNCER_GROUP="postgres"
 USERLIST_PATH="/etc/pgbouncer/userlist.txt"
 TEMP_USERLIST="/tmp/pgbouncer_userlist.tmp"
 PGBOUNCER_SERVICE="pgbouncer"
